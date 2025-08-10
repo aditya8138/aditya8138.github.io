@@ -5,27 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Aditya Singh</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans">
+<body class="bg-gray-50 text-gray-800 font-sans transition-colors duration-300">
 
   <!-- Header -->
-  <header class="bg-white shadow">
+  <header class="bg-white dark:bg-gray-900 shadow">
     <div class="max-w-5xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center sm:justify-between">
-      <h1 class="text-3xl font-bold">Aditya Singh</h1>
-      <nav class="mt-4 sm:mt-0 space-x-6 text-gray-600">
-        <a href="#about" class="hover:text-blue-600">About</a>
-        <a href="#projects" class="hover:text-blue-600">Projects</a>
-        <a href="#contact" class="hover:text-blue-600">Contact</a>
-      </nav>
+      <h1 class="text-3xl font-bold dark:text-white">Aditya Singh</h1>
+      <div class="flex items-center space-x-6 mt-4 sm:mt-0">
+        <nav class="space-x-6 text-gray-600 dark:text-gray-300">
+          <a href="#about" class="hover:text-blue-600">About</a>
+          <a href="#projects" class="hover:text-blue-600">Projects</a>
+          <a href="#resume" class="hover:text-blue-600">Resume</a>
+          <a href="#contact" class="hover:text-blue-600">Contact</a>
+        </nav>
+        <button id="darkModeToggle" aria-label="Toggle dark mode" class="p-2 rounded bg-gray-200 dark:bg-gray-700 dark:text-white">
+          🌙
+        </button>
+      </div>
     </div>
   </header>
 
   <!-- Hero -->
-  <section class="bg-blue-50">
+  <section class="bg-blue-50 dark:bg-gray-800">
     <div class="max-w-5xl mx-auto px-6 py-20 text-center">
-      <h2 class="text-4xl font-bold mb-4">Hi, I'm Aditya</h2>
-      <p class="text-lg text-gray-700 mb-6">
-        I'm a Software Engineer specializing in backend development, distributed systems, and cloud architecture.
+      <h2 class="text-4xl font-bold mb-4 dark:text-white">Hi, I'm Aditya</h2>
+      <p class="text-lg text-gray-700 dark:text-gray-300 mb-6">
+        Software Engineer specializing in backend development, distributed systems, and cloud architecture.
       </p>
       <a href="#projects" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
         View My Work
@@ -35,57 +42,45 @@
 
   <!-- About -->
   <section id="about" class="max-w-5xl mx-auto px-6 py-16">
-    <h2 class="text-3xl font-bold mb-4">About Me</h2>
-    <p class="text-gray-700 leading-relaxed">
+    <h2 class="text-3xl font-bold mb-4 dark:text-white">About Me</h2>
+    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
       I’m a software engineer with expertise in Go, Java, and Kubernetes. My focus is building reliable and scalable backend systems.
-      I enjoy tackling complex distributed system challenges, automating deployments, and writing clean, maintainable code.
     </p>
   </section>
 
   <!-- Projects -->
-  <section id="projects" class="bg-gray-100 py-16">
+  <section id="projects" class="bg-gray-100 dark:bg-gray-800 py-16">
     <div class="max-w-5xl mx-auto px-6">
-      <h2 class="text-3xl font-bold mb-8">Projects</h2>
-      <div class="grid gap-8 sm:grid-cols-2">
-        <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
-          <h3 class="text-xl font-semibold mb-2">Distributed Lock Manager</h3>
-          <p class="text-gray-600 mb-4">
-            ZooKeeper-based distributed lock implementation for gNMI target coordination.
-          </p>
-          <a href="https://github.com/username/distributed-lock-manager" class="text-blue-600 hover:underline">
-            View on GitHub →
-          </a>
-        </div>
-
-        <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
-          <h3 class="text-xl font-semibold mb-2">Kubernetes Operator</h3>
-          <p class="text-gray-600 mb-4">
-            Operator for managing rolling upgrades of stateful distributed clusters with zero downtime.
-          </p>
-          <a href="https://github.com/username/k8s-operator" class="text-blue-600 hover:underline">
-            View on GitHub →
-          </a>
-        </div>
-      </div>
+      <h2 class="text-3xl font-bold mb-8 dark:text-white">Projects</h2>
+      <div id="projectsContainer" class="grid gap-8 sm:grid-cols-2"></div>
     </div>
+  </section>
+
+  <!-- Resume -->
+  <section id="resume" class="max-w-5xl mx-auto px-6 py-16">
+    <h2 class="text-3xl font-bold mb-4 dark:text-white">Resume</h2>
+    <iframe src="resume.pdf" class="w-full h-96 border" title="Resume"></iframe>
+    <p class="mt-4">
+      <a href="resume.pdf" download class="text-blue-600 hover:underline">Download PDF</a>
+    </p>
   </section>
 
   <!-- Contact -->
   <section id="contact" class="max-w-5xl mx-auto px-6 py-16">
-    <h2 class="text-3xl font-bold mb-4">Contact</h2>
-    <p class="text-gray-700 mb-4">Let’s connect! Feel free to reach out for collaborations or just a chat.</p>
-    <ul class="space-y-2">
+    <h2 class="text-3xl font-bold mb-4 dark:text-white">Contact</h2>
+    <ul class="space-y-2 text-gray-700 dark:text-gray-300">
       <li>Email: <a href="mailto:you@example.com" class="text-blue-600 hover:underline">aditya8138@gmail.com</a></li>
-      <li>LinkedIn: <a href="https://linkedin.com/in/meet-aditya" class="text-blue-600 hover:underline">Meet Aditya/</a></li>
+      <li>LinkedIn: <a href="https://linkedin.com/in/meet-aditya" class="text-blue-600 hover:underline">linkedin.com/in/meet-aditya</a></li>
     </ul>
   </section>
 
   <!-- Footer -->
-  <footer class="bg-white border-t mt-12">
-    <div class="max-w-5xl mx-auto px-6 py-6 text-center text-gray-500">
+  <footer class="bg-white dark:bg-gray-900 border-t mt-12">
+    <div class="max-w-5xl mx-auto px-6 py-6 text-center text-gray-500 dark:text-gray-400">
       © 2025 Aditya Singh. Built with Tailwind CSS.
     </div>
   </footer>
 
+  <script src="script.js"></script>
 </body>
 </html>

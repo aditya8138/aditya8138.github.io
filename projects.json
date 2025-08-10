@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Distributed Lock Manager",
+    "description": "ZooKeeper-based distributed lock implementation for gNMI target coordination.",
+    "url": "https://github.com/username/distributed-lock-manager"
+  },
+  {
+    "name": "Kubernetes Operator",
+    "description": "Operator for managing rolling upgrades of stateful distributed clusters.",
+    "url": "https://github.com/username/k8s-operator"
+  }
+]

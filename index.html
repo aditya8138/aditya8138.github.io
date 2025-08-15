@@ -17,18 +17,17 @@
     .bubble {
       position: absolute;
       border-radius: 50%;
-      padding: 1rem 2rem;
+      padding: 0.5rem 1rem;
       color: white;
       font-weight: bold;
       text-align: center;
-      white-space: nowrap;
       cursor: pointer;
-      transition: transform 0.3s ease;
-      animation: floatDown linear infinite;
+      transition: transform 0.3s ease, top 2s ease, left 2s ease;
+      white-space: nowrap;
     }
 
     .bubble:hover {
-      transform: scale(1.4) !important;
+      transform: scale(1.4);
       z-index: 10;
     }
 
@@ -62,11 +61,11 @@
       <p class="text-lg text-gray-700 dark:text-gray-300 mb-6">
         Software Engineer specializing in backend development, distributed systems, and cloud architecture.
       </p>
-      <a href="#skills" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+      <!-- <a href="#skills" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
         Check My Skills
-      </a>
+      </a> -->
     </div>
-    <div id="bubblesContainer" class="absolute inset-0"></div>
+    <!-- <div id="bubblesContainer" class="absolute inset-0"></div> -->
   </section>
 
   <!-- About -->
@@ -90,13 +89,30 @@
     </div>
   </section> -->
 
-  <!-- Skills Bubbles -->
-  <section id="skills" class="bg-gray-100 dark:bg-gray-800 py-16 relative overflow-hidden">
-    <div class="max-w-5xl mx-auto px-6 relative z-10">
-      <h2 class="text-3xl font-bold mb-8 dark:text-white">Skills</h2>
-      <p class="mb-6 text-gray-700 dark:text-gray-300">These are the languages, tools, and frameworks I work with:</p>
+  <!-- Skills -->
+  <section id="skills" class="bg-gray-100 dark:bg-gray-800 py-16">
+    <div class="max-w-5xl mx-auto px-6">
+      <h2 class="text-3xl font-bold mb-4 dark:text-white">Skills</h2>
+      <p class="mb-6 text-gray-700 dark:text-gray-300">
+        These are the languages, tools, and frameworks I work with:
+      </p>
+
+      <!-- Separate containers for each category -->
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold mb-2 dark:text-white">Languages</h3>
+        <div id="languagesBubbles" class="relative w-full h-32 mt-2"></div>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold mb-2 dark:text-white">Tools</h3>
+        <div id="toolsBubbles" class="relative w-full h-32 mt-2"></div>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold mb-2 dark:text-white">Frameworks</h3>
+        <div id="frameworksBubbles" class="relative w-full h-32 mt-2"></div>
+      </div>
     </div>
-    <div id="skillsBubbles" class="absolute inset-0"></div>
   </section>
 
 

@@ -60,33 +60,73 @@ document.addEventListener('DOMContentLoaded', () => {
     "#6A4C93", "#00BFA6", "#EF476F", "#06D6A0", "#118AB2"
   ];
 
-  function createBubble(text, container) {
-    const bubble = document.createElement("div");
-    bubble.className = "bubble";
-    bubble.textContent = text;
-    bubble.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-    bubble.style.left = Math.random() * 90 + "%";
-    bubble.style.top = -50 + "px";
-    bubble.style.animationDuration = (6 + Math.random() * 6) + "s";
-    bubble.style.fontSize = 14 + Math.random() * 6 + "px";
-    container.appendChild(bubble);
-
-    setTimeout(() => bubble.remove(), parseFloat(bubble.style.animationDuration) * 1000);
-  }
-
-  function spawnBubbles(containerId, items) {
+  function createBubbles(containerId, items) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    items.forEach(item => createBubble(item, container));
+    const bubbles = [];
 
-    setInterval(() => {
-      const item = items[Math.floor(Math.random() * items.length)];
-      createBubble(item, container);
-    }, 1000);
+    function isOverlapping(x, y, width, height) {
+      for (const b of bubbles) {
+        const dx = x - b.left;
+        const dy = y - b.top;
+        const distance = Math.sqrt(dx*dx + dy*dy);
+        if (distance < (width + b.width)/2) return true;
+      }
+      return false;
+    }
+
+    items.forEach(text => {
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      bubble.textContent = text;
+      bubble.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+      // Temporarily append to measure width/height
+      container.appendChild(bubble);
+      const width = bubble.offsetWidth + 10;  // extra padding
+      const height = bubble.offsetHeight + 10;
+
+      let left, top, attempts = 0;
+      do {
+        left = Math.random() * (container.offsetWidth - width);
+        top = Math.random() * (container.offsetHeight - height);
+        attempts++;
+      } while (isOverlapping(left, top, width, height) && attempts < 100);
+
+      bubble.style.left = `${left}px`;
+      bubble.style.top = `${top}px`;
+
+      bubbles.push({left, top, width, height, element: bubble});
+
+      // Gentle floating within small range
+      setInterval(() => {
+        const offsetX = (Math.random() - 0.5) * 20;
+        const offsetY = (Math.random() - 0.5) * 20;
+        let newLeft = Math.min(Math.max(0, parseFloat(bubble.style.left) + offsetX), container.offsetWidth - width);
+        let newTop = Math.min(Math.max(0, parseFloat(bubble.style.top) + offsetY), container.offsetHeight - height);
+
+        let safe = true;
+        for (const b of bubbles) {
+          if (b.element === bubble) continue;
+          const dx = newLeft - b.left;
+          const dy = newTop - b.top;
+          const distance = Math.sqrt(dx*dx + dy*dy);
+          if (distance < (width + b.width)/2) {
+            safe = false;
+            break;
+          }
+        }
+        if (safe) {
+          bubble.style.left = `${newLeft}px`;
+          bubble.style.top = `${newTop}px`;
+        }
+      }, 3000 + Math.random() * 2000);
+    });
   }
 
-  spawnBubbles("bubblesContainer", [...bubblesData.languages, ...bubblesData.tools, ...bubblesData.frameworks]);
-  spawnBubbles("skillsBubbles", [...bubblesData.languages, ...bubblesData.tools, ...bubblesData.frameworks]);
+  createBubbles("languagesBubbles", bubblesData.languages);
+  createBubbles("toolsBubbles", bubblesData.tools);
+  createBubbles("frameworksBubbles", bubblesData.frameworks);
 
 });

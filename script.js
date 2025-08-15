@@ -61,14 +61,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    // Calculate diameter based on the longest text
-    let maxLength = Math.max(...items.map(t => t.length));
-    const diameter = Math.max(60, maxLength * 12); // ensure minimum size
+    // Determine bubble diameter based on longest text
+    const maxLength = Math.max(...items.map(t => t.length));
+    const diameter = Math.max(70, maxLength * 14); // min 70px
 
     const bubbles = [];
+    const padding = 10; // extra spacing between bubbles
 
-    // Initial positions (grid-like to avoid overlap)
-    const cols = Math.ceil(Math.sqrt(items.length));
+    // Calculate number of columns and rows to prevent overlap
+    const cols = Math.floor(container.offsetWidth / (diameter + padding)) || 1;
     const rows = Math.ceil(items.length / cols);
     const spacingX = (container.offsetWidth - diameter) / (cols - 1 || 1);
     const spacingY = (container.offsetHeight - diameter) / (rows - 1 || 1);
@@ -86,21 +87,26 @@ document.addEventListener('DOMContentLoaded', () => {
       const row = Math.floor(index / cols);
 
       // Base position
-      bubble.dataset.baseX = col * spacingX;
-      bubble.dataset.baseY = row * spacingY;
+      const baseX = col * spacingX;
+      const baseY = row * spacingY;
 
-      // Small random offset for natural look
-      bubble.dataset.offsetX = (Math.random() - 0.5) * 20;
-      bubble.dataset.offsetY = (Math.random() - 0.5) * 20;
+      // Small random offsets for float effect (max 10px to prevent overlap)
+      const offsetX = (Math.random() - 0.5) * 10;
+      const offsetY = (Math.random() - 0.5) * 10;
 
-      bubble.style.left = `${bubble.dataset.baseX}px`;
-      bubble.style.top = `${bubble.dataset.baseY}px`;
+      bubble.dataset.baseX = baseX;
+      bubble.dataset.baseY = baseY;
+      bubble.dataset.offsetX = offsetX;
+      bubble.dataset.offsetY = offsetY;
+
+      bubble.style.left = `${baseX}px`;
+      bubble.style.top = `${baseY}px`;
 
       container.appendChild(bubble);
       bubbles.push(bubble);
     });
 
-    // Smooth float animation using sinusoidal motion
+    // Smooth float animation (sinusoidal)
     let angle = 0;
     function animate() {
       angle += 0.02;

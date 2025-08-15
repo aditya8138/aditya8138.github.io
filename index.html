@@ -6,6 +6,23 @@
   <title>Aditya Singh</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Random floating animation in both directions */
+    @keyframes float {
+      0%   { transform: translate(var(--x-start), var(--y-start)); }
+      50%  { transform: translate(var(--x-mid), var(--y-mid)); }
+      100% { transform: translate(var(--x-start), var(--y-start)); }
+    }
+    .bubble {
+      animation: float var(--duration) ease-in-out infinite;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .bubble:hover {
+      transform: scale(1.3) !important;
+      box-shadow: 0px 0px 20px rgba(0,0,0,0.2);
+      z-index: 10;
+    }
+  </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans transition-colors duration-300">
 
@@ -16,7 +33,7 @@
       <div class="flex items-center space-x-6 mt-4 sm:mt-0">
         <nav class="space-x-6 text-gray-600 dark:text-gray-300">
           <a href="#about" class="hover:text-blue-600">About</a>
-          <a href="#projects" class="hover:text-blue-600">Projects</a>
+          <a href="#projects" class="hover:text-blue-600">Skills</a>
           <a href="#resume" class="hover:text-blue-600">Resume</a>
           <a href="#contact" class="hover:text-blue-600">Contact</a>
         </nav>
@@ -49,10 +66,56 @@
   </section>
 
   <!-- Projects -->
-  <section id="projects" class="bg-gray-100 dark:bg-gray-800 py-16">
+  <!-- <section id="projects" class="bg-gray-100 dark:bg-gray-800 py-16">
     <div class="max-w-5xl mx-auto px-6">
       <h2 class="text-3xl font-bold mb-8 dark:text-white">Projects</h2>
       <div id="projectsContainer" class="grid gap-8 sm:grid-cols-2"></div>
+    </div>
+  </section> -->
+
+  <!-- Skills -->
+  <section id="skills" class="bg-gray-100 dark:bg-gray-800 py-16">
+    <div class="max-w-5xl mx-auto px-6">
+      <h2 class="text-3xl font-bold mb-8 dark:text-white">Skills</h2>
+
+      <!-- Coding Languages -->
+      <div class="mb-10">
+        <h3 class="text-xl font-semibold mb-4 dark:text-white">Coding Languages</h3>
+        <div class="flex flex-wrap gap-4">
+          <span class="bubble bg-red-400 text-white font-semibold rounded-full w-24 h-24 flex items-center justify-center">Java</span>
+          <span class="bubble bg-blue-400 text-white font-semibold rounded-full w-24 h-24 flex items-center justify-center">Go</span>
+          <span class="bubble bg-green-400 text-white font-semibold rounded-full w-24 h-24 flex items-center justify-center">Python</span>
+          <span class="bubble bg-yellow-400 text-white font-semibold rounded-full w-24 h-24 flex items-center justify-center">JavaScript</span>
+          <span class="bubble bg-purple-400 text-white font-semibold rounded-full w-24 h-24 flex items-center justify-center">TypeScript</span>
+          <span class="bubble bg-pink-400 text-white font-semibold rounded-full w-24 h-24 flex items-center justify-center">SQL</span>
+        </div>
+      </div>
+
+      <!-- Tools -->
+      <div class="mb-10">
+        <h3 class="text-xl font-semibold mb-4 dark:text-white">Tools</h3>
+        <div class="flex flex-wrap gap-4">
+          <span class="bubble bg-indigo-400 text-white font-semibold rounded-full w-24 h-24 flex items-center justify-center">Docker</span>
+          <span class="bubble bg-orange-400 text-white font-semibold rounded-full w-24 h-24 flex items-center justify-center">K8s</span>
+          <span class="bubble bg-teal-400 text-white font-semibold rounded-full w-24 h-24 flex items-center justify-center">Git</span>
+          <span class="bubble bg-red-500 text-white font-semibold rounded-full w-24 h-24 flex items-center justify-center">Postman</span>
+          <span class="bubble bg-blue-500 text-white font-semibold rounded-full w-24 h-24 flex items-center justify-center">Jenkins</span>
+          <span class="bubble bg-green-500 text-white font-semibold rounded-full w-24 h-24 flex items-center justify-center">AWS</span>
+        </div>
+      </div>
+
+      <!-- Frameworks -->
+      <div>
+        <h3 class="text-xl font-semibold mb-4 dark:text-white">Frameworks</h3>
+        <div class="flex flex-wrap gap-4">
+          <span class="bubble bg-blue-300 text-white font-semibold rounded-full w-24 h-24 flex items-center justify-center">Spring Boot</span>
+          <span class="bubble bg-purple-300 text-white font-semibold rounded-full w-24 h-24 flex items-center justify-center">gRPC</span>
+          <span class="bubble bg-green-300 text-white font-semibold rounded-full w-24 h-24 flex items-center justify-center">Express</span>
+          <span class="bubble bg-pink-300 text-white font-semibold rounded-full w-24 h-24 flex items-center justify-center">React</span>
+          <span class="bubble bg-indigo-300 text-white font-semibold rounded-full w-24 h-24 flex items-center justify-center">Hibernate</span>
+          <span class="bubble bg-yellow-300 text-white font-semibold rounded-full w-24 h-24 flex items-center justify-center">Micronaut</span>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -69,7 +132,7 @@
   <section id="contact" class="max-w-5xl mx-auto px-6 py-16">
     <h2 class="text-3xl font-bold mb-4 dark:text-white">Contact</h2>
     <ul class="space-y-2 text-gray-700 dark:text-gray-300">
-      <li>Email: <a href="mailto:you@example.com" class="text-blue-600 hover:underline">aditya8138@gmail.com</a></li>
+      <li>Email: <a href="mailto:you@example.com" class="text-blue-600 hover:underline">aditya8139@gmail.com</a></li>
       <li>LinkedIn: <a href="https://linkedin.com/in/meet-aditya" class="text-blue-600 hover:underline">linkedin.com/in/meet-aditya</a></li>
     </ul>
   </section>

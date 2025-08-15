@@ -52,29 +52,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const bubblesData = {
     languages: ["Go", "Java", "Python", "JavaScript", "C++"],
     tools: ["Git", "Docker", "Kubernetes", "Postman", "Jira"],
-    frameworks: ["Spring Boot", "Gin", "React", "Express", "gRPC"]
+    frameworks: ["Spring Boot", "DropWizard", "Micronaut", "React", "Express", "gRPC"]
   };
 
-  const colors = [
-    "#FF6B6B", "#4ECDC4", "#FFD93D", "#1A535C", "#FF9F1C",
-    "#6A4C93", "#00BFA6", "#EF476F", "#06D6A0", "#118AB2"
-  ];
+  const colors = ["#FF6B6B","#4ECDC4","#FFD93D","#1A535C","#FF9F1C","#6A4C93","#00BFA6","#EF476F","#06D6A0","#118AB2"];
 
-  function createBubbles(containerId, items) {
+  function createPhysicsBubbles(containerId, items) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
     const bubbles = [];
-
-    function isOverlapping(x, y, diameter) {
-      for (const b of bubbles) {
-        const dx = x - b.left;
-        const dy = y - b.top;
-        const distance = Math.sqrt(dx*dx + dy*dy);
-        if (distance < (diameter + b.diameter)/2) return true;
-      }
-      return false;
-    }
+    const diameter = 80; // fixed size
 
     items.forEach(text => {
       const bubble = document.createElement('div');
@@ -82,55 +70,67 @@ document.addEventListener('DOMContentLoaded', () => {
       bubble.textContent = text;
       bubble.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
 
-      container.appendChild(bubble);
-
-      // Set diameter based on text length (min 50px, max 100px)
-      const diameter = Math.min(Math.max(50, text.length * 12), 100);
-      bubble.style.width = `${diameter}px`;
-      bubble.style.height = `${diameter}px`;
-      bubble.style.fontSize = `${Math.min(16, diameter / 4)}px`;
-
-      let left, top, attempts = 0;
-      do {
-        left = Math.random() * (container.offsetWidth - diameter);
-        top = Math.random() * (container.offsetHeight - diameter);
-        attempts++;
-      } while (isOverlapping(left, top, diameter) && attempts < 100);
-
+      // Random initial position
+      const left = Math.random() * (container.offsetWidth - diameter);
+      const top = Math.random() * (container.offsetHeight - diameter);
       bubble.style.left = `${left}px`;
       bubble.style.top = `${top}px`;
 
-      bubbles.push({left, top, diameter, element: bubble});
+      container.appendChild(bubble);
 
-      // Gentle floating
-      setInterval(() => {
-        const offsetX = (Math.random() - 0.5) * 20;
-        const offsetY = (Math.random() - 0.5) * 20;
-        let newLeft = Math.min(Math.max(0, parseFloat(bubble.style.left) + offsetX), container.offsetWidth - diameter);
-        let newTop = Math.min(Math.max(0, parseFloat(bubble.style.top) + offsetY), container.offsetHeight - diameter);
-
-        let safe = true;
-        for (const b of bubbles) {
-          if (b.element === bubble) continue;
-          const dx = newLeft - b.left;
-          const dy = newTop - b.top;
-          const distance = Math.sqrt(dx*dx + dy*dy);
-          if (distance < (diameter + b.diameter)/2) {
-            safe = false;
-            break;
-          }
-        }
-
-        if (safe) {
-          bubble.style.left = `${newLeft}px`;
-          bubble.style.top = `${newTop}px`;
-        }
-      }, 3000 + Math.random() * 2000);
+      bubbles.push({element: bubble, x: left, y: top, vx: 0, vy: 0});
     });
+
+    // Simple physics loop
+    function update() {
+      const gravity = 0.2;
+      const friction = 0.9;
+      const repelDistance = 90;
+
+      bubbles.forEach((b, i) => {
+        // Gravity
+        b.vy += gravity;
+
+        // Repel other bubbles
+        bubbles.forEach((other, j) => {
+          if (i === j) return;
+          const dx = b.x - other.x;
+          const dy = b.y - other.y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist < repelDistance && dist > 0) {
+            const force = (repelDistance - dist) / 2;
+            b.vx += (dx / dist) * force * 0.05;
+            b.vy += (dy / dist) * force * 0.05;
+          }
+        });
+
+        // Update position
+        b.x += b.vx;
+        b.y += b.vy;
+
+        // Bounce off walls
+        if (b.x < 0) { b.x = 0; b.vx *= -0.5; }
+        if (b.x > container.offsetWidth - diameter) { b.x = container.offsetWidth - diameter; b.vx *= -0.5; }
+        if (b.y < 0) { b.y = 0; b.vy *= -0.5; }
+        if (b.y > container.offsetHeight - diameter) { b.y = container.offsetHeight - diameter; b.vy *= -0.5; }
+
+        // Apply friction
+        b.vx *= friction;
+        b.vy *= friction;
+
+        // Apply position
+        b.element.style.left = `${b.x}px`;
+        b.element.style.top = `${b.y}px`;
+      });
+
+      requestAnimationFrame(update);
+    }
+
+    update();
   }
 
-  createBubbles("languagesBubbles", bubblesData.languages);
-  createBubbles("toolsBubbles", bubblesData.tools);
-  createBubbles("frameworksBubbles", bubblesData.frameworks);
+  createPhysicsBubbles("languagesBubbles", bubblesData.languages);
+  createPhysicsBubbles("toolsBubbles", bubblesData.tools);
+  createPhysicsBubbles("frameworksBubbles", bubblesData.frameworks);
 
 });

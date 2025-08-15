@@ -57,80 +57,66 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const colors = ["#FF6B6B","#4ECDC4","#FFD93D","#1A535C","#FF9F1C","#6A4C93","#00BFA6","#EF476F","#06D6A0","#118AB2"];
 
-  function createPhysicsBubbles(containerId, items) {
+  function createBubbles(containerId, items) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    const bubbles = [];
-    const diameter = 80; // fixed size
+    // Calculate diameter based on the longest text
+    let maxLength = Math.max(...items.map(t => t.length));
+    const diameter = Math.max(60, maxLength * 12); // ensure minimum size
 
-    items.forEach(text => {
+    const bubbles = [];
+
+    // Initial positions (grid-like to avoid overlap)
+    const cols = Math.ceil(Math.sqrt(items.length));
+    const rows = Math.ceil(items.length / cols);
+    const spacingX = (container.offsetWidth - diameter) / (cols - 1 || 1);
+    const spacingY = (container.offsetHeight - diameter) / (rows - 1 || 1);
+
+    items.forEach((text, index) => {
       const bubble = document.createElement('div');
       bubble.className = 'bubble';
       bubble.textContent = text;
+      bubble.style.width = `${diameter}px`;
+      bubble.style.height = `${diameter}px`;
+      bubble.style.fontSize = `${Math.min(16, diameter / 4)}px`;
       bubble.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
 
-      // Random initial position
-      const left = Math.random() * (container.offsetWidth - diameter);
-      const top = Math.random() * (container.offsetHeight - diameter);
-      bubble.style.left = `${left}px`;
-      bubble.style.top = `${top}px`;
+      const col = index % cols;
+      const row = Math.floor(index / cols);
+
+      // Base position
+      bubble.dataset.baseX = col * spacingX;
+      bubble.dataset.baseY = row * spacingY;
+
+      // Small random offset for natural look
+      bubble.dataset.offsetX = (Math.random() - 0.5) * 20;
+      bubble.dataset.offsetY = (Math.random() - 0.5) * 20;
+
+      bubble.style.left = `${bubble.dataset.baseX}px`;
+      bubble.style.top = `${bubble.dataset.baseY}px`;
 
       container.appendChild(bubble);
-
-      bubbles.push({element: bubble, x: left, y: top, vx: 0, vy: 0});
+      bubbles.push(bubble);
     });
 
-    // Simple physics loop
-    function update() {
-      const gravity = 0.2;
-      const friction = 0.9;
-      const repelDistance = 90;
-
+    // Smooth float animation using sinusoidal motion
+    let angle = 0;
+    function animate() {
+      angle += 0.02;
       bubbles.forEach((b, i) => {
-        // Gravity
-        b.vy += gravity;
-
-        // Repel other bubbles
-        bubbles.forEach((other, j) => {
-          if (i === j) return;
-          const dx = b.x - other.x;
-          const dy = b.y - other.y;
-          const dist = Math.sqrt(dx*dx + dy*dy);
-          if (dist < repelDistance && dist > 0) {
-            const force = (repelDistance - dist) / 2;
-            b.vx += (dx / dist) * force * 0.05;
-            b.vy += (dy / dist) * force * 0.05;
-          }
-        });
-
-        // Update position
-        b.x += b.vx;
-        b.y += b.vy;
-
-        // Bounce off walls
-        if (b.x < 0) { b.x = 0; b.vx *= -0.5; }
-        if (b.x > container.offsetWidth - diameter) { b.x = container.offsetWidth - diameter; b.vx *= -0.5; }
-        if (b.y < 0) { b.y = 0; b.vy *= -0.5; }
-        if (b.y > container.offsetHeight - diameter) { b.y = container.offsetHeight - diameter; b.vy *= -0.5; }
-
-        // Apply friction
-        b.vx *= friction;
-        b.vy *= friction;
-
-        // Apply position
-        b.element.style.left = `${b.x}px`;
-        b.element.style.top = `${b.y}px`;
+        const floatX = Math.sin(angle + i) * b.dataset.offsetX;
+        const floatY = Math.cos(angle + i) * b.dataset.offsetY;
+        b.style.left = `${parseFloat(b.dataset.baseX) + floatX}px`;
+        b.style.top = `${parseFloat(b.dataset.baseY) + floatY}px`;
       });
-
-      requestAnimationFrame(update);
+      requestAnimationFrame(animate);
     }
-
-    update();
+    animate();
   }
 
-  createPhysicsBubbles("languagesBubbles", bubblesData.languages);
-  createPhysicsBubbles("toolsBubbles", bubblesData.tools);
-  createPhysicsBubbles("frameworksBubbles", bubblesData.frameworks);
+  createBubbles("languagesBubbles", bubblesData.languages);
+  createBubbles("toolsBubbles", bubblesData.tools);
+  createBubbles("frameworksBubbles", bubblesData.frameworks);
 
 });

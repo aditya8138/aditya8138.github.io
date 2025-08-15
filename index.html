@@ -16,14 +16,18 @@
 
     .bubble {
       position: absolute;
-      border-radius: 50%;
-      padding: 0.5rem 1rem;
+      border-radius: 50%;         /* perfect circle */
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: white;
       font-weight: bold;
       text-align: center;
       cursor: pointer;
       transition: transform 0.3s ease, top 2s ease, left 2s ease;
-      white-space: nowrap;
+      padding: 0;                /* padding handled in size */
+      box-sizing: border-box;
+      overflow: hidden;
     }
 
     .bubble:hover {

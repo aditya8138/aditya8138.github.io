@@ -66,12 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const bubbles = [];
 
-    function isOverlapping(x, y, width, height) {
+    function isOverlapping(x, y, diameter) {
       for (const b of bubbles) {
         const dx = x - b.left;
         const dy = y - b.top;
         const distance = Math.sqrt(dx*dx + dy*dy);
-        if (distance < (width + b.width)/2) return true;
+        if (distance < (diameter + b.diameter)/2) return true;
       }
       return false;
     }
@@ -82,29 +82,32 @@ document.addEventListener('DOMContentLoaded', () => {
       bubble.textContent = text;
       bubble.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
 
-      // Temporarily append to measure width/height
       container.appendChild(bubble);
-      const width = bubble.offsetWidth + 10;  // extra padding
-      const height = bubble.offsetHeight + 10;
+
+      // Set diameter based on text length (min 50px, max 100px)
+      const diameter = Math.min(Math.max(50, text.length * 12), 100);
+      bubble.style.width = `${diameter}px`;
+      bubble.style.height = `${diameter}px`;
+      bubble.style.fontSize = `${Math.min(16, diameter / 4)}px`;
 
       let left, top, attempts = 0;
       do {
-        left = Math.random() * (container.offsetWidth - width);
-        top = Math.random() * (container.offsetHeight - height);
+        left = Math.random() * (container.offsetWidth - diameter);
+        top = Math.random() * (container.offsetHeight - diameter);
         attempts++;
-      } while (isOverlapping(left, top, width, height) && attempts < 100);
+      } while (isOverlapping(left, top, diameter) && attempts < 100);
 
       bubble.style.left = `${left}px`;
       bubble.style.top = `${top}px`;
 
-      bubbles.push({left, top, width, height, element: bubble});
+      bubbles.push({left, top, diameter, element: bubble});
 
-      // Gentle floating within small range
+      // Gentle floating
       setInterval(() => {
         const offsetX = (Math.random() - 0.5) * 20;
         const offsetY = (Math.random() - 0.5) * 20;
-        let newLeft = Math.min(Math.max(0, parseFloat(bubble.style.left) + offsetX), container.offsetWidth - width);
-        let newTop = Math.min(Math.max(0, parseFloat(bubble.style.top) + offsetY), container.offsetHeight - height);
+        let newLeft = Math.min(Math.max(0, parseFloat(bubble.style.left) + offsetX), container.offsetWidth - diameter);
+        let newTop = Math.min(Math.max(0, parseFloat(bubble.style.top) + offsetY), container.offsetHeight - diameter);
 
         let safe = true;
         for (const b of bubbles) {
@@ -112,11 +115,12 @@ document.addEventListener('DOMContentLoaded', () => {
           const dx = newLeft - b.left;
           const dy = newTop - b.top;
           const distance = Math.sqrt(dx*dx + dy*dy);
-          if (distance < (width + b.width)/2) {
+          if (distance < (diameter + b.diameter)/2) {
             safe = false;
             break;
           }
         }
+
         if (safe) {
           bubble.style.left = `${newLeft}px`;
           bubble.style.top = `${newTop}px`;

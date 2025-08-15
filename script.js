@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const darkToggle = document.getElementById('darkModeToggle');
   const body = document.body;
 
+  // Load saved mode
   if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
     body.classList.add('dark');
   }
@@ -61,20 +62,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    // Determine bubble diameter based on longest text
+    // Calculate diameter based on the longest text
     const maxLength = Math.max(...items.map(t => t.length));
     const diameter = Math.max(70, maxLength * 14); // min 70px
+    const margin = 10; // space between bubbles
 
     const bubbles = [];
-    const padding = 10; // extra spacing between bubbles
 
-    // Calculate number of columns and rows to prevent overlap
-    const cols = Math.floor(container.offsetWidth / (diameter + padding)) || 1;
-    const rows = Math.ceil(items.length / cols);
-    const spacingX = (container.offsetWidth - diameter) / (cols - 1 || 1);
-    const spacingY = (container.offsetHeight - diameter) / (rows - 1 || 1);
+    let currentX = 0;
+    let currentY = 0;
+    let rowHeight = diameter + margin;
 
-    items.forEach((text, index) => {
+    items.forEach((text) => {
+      // Check if bubble fits in current row
+      if (currentX + diameter > container.offsetWidth) {
+        // Move to next row
+        currentX = 0;
+        currentY += rowHeight;
+      }
+
       const bubble = document.createElement('div');
       bubble.className = 'bubble';
       bubble.textContent = text;
@@ -83,30 +89,25 @@ document.addEventListener('DOMContentLoaded', () => {
       bubble.style.fontSize = `${Math.min(16, diameter / 4)}px`;
       bubble.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
 
-      const col = index % cols;
-      const row = Math.floor(index / cols);
-
       // Base position
-      const baseX = col * spacingX;
-      const baseY = row * spacingY;
+      bubble.dataset.baseX = currentX;
+      bubble.dataset.baseY = currentY;
 
-      // Small random offsets for float effect (max 10px to prevent overlap)
-      const offsetX = (Math.random() - 0.5) * 10;
-      const offsetY = (Math.random() - 0.5) * 10;
+      // Small random offsets for float effect (max 10px)
+      bubble.dataset.offsetX = (Math.random() - 0.5) * 10;
+      bubble.dataset.offsetY = (Math.random() - 0.5) * 10;
 
-      bubble.dataset.baseX = baseX;
-      bubble.dataset.baseY = baseY;
-      bubble.dataset.offsetX = offsetX;
-      bubble.dataset.offsetY = offsetY;
-
-      bubble.style.left = `${baseX}px`;
-      bubble.style.top = `${baseY}px`;
+      bubble.style.left = `${bubble.dataset.baseX}px`;
+      bubble.style.top = `${bubble.dataset.baseY}px`;
 
       container.appendChild(bubble);
       bubbles.push(bubble);
+
+      // Update X for next bubble
+      currentX += diameter + margin;
     });
 
-    // Smooth float animation (sinusoidal)
+    // Smooth float animation
     let angle = 0;
     function animate() {
       angle += 0.02;
